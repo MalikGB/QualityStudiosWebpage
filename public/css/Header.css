@@ -1,0 +1,10 @@
+.logo {
+    width:500px;
+}
+.header1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #eee;
+}

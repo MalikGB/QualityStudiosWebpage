@@ -1,0 +1,57 @@
+:root {
+    --col-1: 8.33%;
+    --col-2: 16.66%;
+    --col-3: 25%;
+    --col-4: 33.33%;
+    --col-5: 41.66%;
+    --col-6: 50%;
+    --col-7: 58.33%;
+    --col-8: 66.66%;
+    --col-9: 75%;
+    --col-10: 83.33%;
+    --col-11: 91.66%;
+    --col-12: 100%;
+}
+
+i {
+    color: rgb(56, 56, 56)
+}
+
+a:link, a:visited {
+    color: green;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+staff-page{
+    display: inline-block;
+    text-align: center;
+}
+
+staff-box {
+    display: inline-block; /*Custom elements need this to work properly*/
+    border: 2px solid rgb(230, 230, 230);
+    margin: 10px;
+    min-width: var(--col-3);
+    min-height: 250px;
+    max-width: var(--col-3);
+    max-height: 250px;
+    background: rgb(238, 238, 238); 
+    overflow: hidden;
+    text-align: left;
+}
+
+staff-photo {
+    display: block;
+    width: 20%; 
+    height: 500px; /*fit window wasn't working*/
+    float: left; 
+}
+
+staff-des { 
+    float: right; 
+    width: 80%;  
+    height: 500px; 
+    position: relative;
+    top: -15px;
+}

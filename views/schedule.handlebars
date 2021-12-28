@@ -1,0 +1,37 @@
+<header>
+    <h2>Quality Studios Barbershop</h2>
+    <h3>Schedule</h3>
+</header>
+{{> navBar}}
+{{#if user}}
+    <p>Show schedule with option to register</p>
+{{else}}
+    <p>Show schedule without option to register</p>
+{{/if}}
+<form onsubmit="return updateResults()" style="margin-left: 100px;">
+      <input type="text" placeholder="Search.." id="search">
+      <button type="submit">Submit</button>
+</form>
+<br>
+
+<form id="key" class="key">
+    <label class="checkbox">Barber
+        <input type="checkbox" checked="checked" id="barber" value="barber" onChange="return updateResults()">
+        <span class="barber checkmark"></span>
+    </label>
+    <label class="checkbox">Lash Technician
+        <input type="checkbox" checked="checked" id="lash technician" value="lash technician" onChange="return updateResults()">
+        <span class="lash technician checkmark"></span>
+    </label>
+    <label class="checkbox">Other
+        <input type="checkbox" checked="checked" id="other" value="other" onChange="return updateResults()">
+        <span class="other checkmark"></span>
+    </label>
+</form>
+
+
+{{#with staff}}
+    {{{makeTable}}}
+{{/with}}
+
+{{> footer}}

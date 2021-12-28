@@ -1,0 +1,50 @@
+<header>
+    <h2>Quality Studios Barbershop</h2>
+    <h3>Staff</h3>
+</header>
+{{> navBar}}
+<form onsubmit="return updateResults()">
+      <input type="text" placeholder="Search.." id="search">
+      <button type="submit">Submit</button>
+</form>
+<staff-page id="staffpage">
+    {{#each staff}}
+        <staff-box id="{{this.name}}">
+            <staff-photo>
+                {{#if this.photo}}
+                    <img src="/img/{{this.photo}}" alt="{{this.name}}" style="width: 90%; height: auto">
+                {{else}}
+                    <img src="/img/default.png" alt="{{this.name}}" style="width: 90%; height: auto">
+                {{/if}}
+            </staff-photo>
+            <staff-des>
+                <h2>{{this.name}}</h2>
+                <h4>{{this.speciality}}</h4>
+                <hr style="height: 5px; width: 30px; margin-left: 0; background-color: darkgray">
+                {{#if this.booksy}}
+                    <img src="/img/booksy_logo.png" style="width: 20px; height: 20px; float: left; position: relative; top: 10px;"> </p>
+                    <a href=" {{this.link}}" target="_blank" rel="noopener noreferrer">{{this.booksy}}</a>
+                    <br>
+                {{else if this.site}}
+                    <i class="fa fa-at"></i>
+                    <a href="{{this.link}}" target="_blank" rel="noopener noreferrer">{{this.site}}</a>
+                    <br>
+                {{/if}}
+                {{#if this.number}}
+                    <i class="fa fa-mobile"></i>
+                    <a href="tel:{{this.number}}">{{this.number}}</a>
+                    <br>
+                {{/if}}
+                {{#if this.instagram}}
+                    <i class="fa fa-instagram"></i>
+                    <a href="https://www.instagram.com/{{this.instagram}}" target="_blank" rel="noopener noreferrer">{{this.instagram}}</a>
+                    <br>
+                {{/if}}
+            </staff-des>
+        </staff-box>
+    {{/each}}
+</staff-page>
+ {{#ifEqual user.email "admin@admin"}}
+    <a class="navigationButton" href="/staffRegister">Add Staff</a>
+ {{/ifEqual}}
+ {{> footer}}

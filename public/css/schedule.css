@@ -1,0 +1,115 @@
+:root {
+    --col-1: 8.33%;
+    --col-2: 16.66%;
+    --col-3: 25%;
+    --col-4: 33.33%;
+    --col-5: 41.66%;
+    --col-6: 50%;
+    --col-7: 58.33%;
+    --col-8: 66.66%;
+    --col-9: 75%;
+    --col-10: 83.33%;
+    --col-11: 91.66%;
+    --col-12: 100%;
+}
+table, th, td {   
+    border: 1px solid rgb(230, 230, 230);
+    background: rgb(238, 238, 238);
+    border-collapse: collapse;
+}
+
+table {
+    position: relative;
+    display: inline-table; 
+    min-width: var(--col-8);
+    max-width: var(--col-8);
+}
+
+th, td {
+    width: var(--col-1);
+}
+.key {
+    display: inline-table; /*Only way for table and key to be side by side*/
+    border: 2px solid rgb(230, 230, 230);
+    margin-left: var(--col-1);
+    margin-right: 10px;
+    min-width: var(--col-2);
+    min-height: 250px;
+    max-width: var(--col-2);
+    max-height: 250px;
+    background: rgb(238, 238, 238); 
+    overflow-x: scroll;
+    padding-top: 35px;
+    padding-left: 35px;
+    vertical-align: top
+}
+.checkbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+/* Hide the browser's default checkbox */
+.checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .checkbox input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.profile {
+    width: 20px;
+    height: 20px;
+    float: left; 
+    position: relative; 
+}
+.barber {
+    background-color:lightseagreen;
+}
+.lash.technician {
+    background-color: mediumorchid;
+}
+
+.other {
+    background-color: tomato;
+}

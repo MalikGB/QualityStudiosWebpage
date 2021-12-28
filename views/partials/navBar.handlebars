@@ -1,0 +1,23 @@
+<div style="text-align: center;">
+    <ul class="navigationBar">
+        <a class="navLink" href="/"><li style="float:left" class="navigationElement">Home</li></a>
+        <a class="navLink" href="/social"><li style="float:left" class="navigationElement">Socials</li></a>
+        <a class="navLink" href="/staff"><li style="float:left" class="navigationElement">Staff</li></a>
+        <a class="navLink" href="/schedule"><li style="float:left" class="navigationElement">Schedule</li></a>
+        <a class="navLink" href="/about"><li style="float:left" class="navigationElement">About</li></a>
+        <a class="navLink" href="/reviews"><li style="float:left" class="navigationElement">Reviews</li></a>
+    </ul>
+    {{#if user}}
+    {{!-- set an invisible entry on the left side to keep the main bar centered --}}
+        <form style="display:inline-block; float:left; visibility:hidden" action="" method="POST">
+            <button class="navigationButton" type="submit">Log Out</button>
+        </form>    
+        <form style="display:inline-block; float:right;" action="/logout?_method=DELETE" method="POST">
+            <button class="navigationButton" type="submit">Log Out</button>
+        </form>    
+    {{else}}
+    {{!-- set an invisible entry on the left side to keep the main bar centered --}}
+        <li style="float:left; visibility:hidden;" class="navigationElement">Login</li>
+        <a class="navLink" href="/login"><li style="float:right" class="navigationElement">Login</li></a>
+        {{/if}}
+</div>

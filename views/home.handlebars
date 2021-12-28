@@ -1,0 +1,153 @@
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <header>
+        <div style="background-color: black;">
+            <div style=" position: top; width: 100%; height: 35vh; background: url(/img/qs_logo.png);
+            background-size: 100%;background-repeat: no-repeat ;background-position: center; background-attachment: fixed;
+            padding-bottom: 350px; " id = "header"> 
+            </div>
+        </div>
+    </header>
+    <div style="text-align: center" id= "navBar">
+       {{> navBar}}
+    </div>
+    
+   
+    <div class = "FlavorText" style="margin-top: 12%;">
+    <p style="text-align: center;">Quality Cuts</p>
+    <div id = "cutsslideshow" style=" width: 600px; height: 400px; ">
+            <div>
+                <img src="/img/1.jfif" height="100%" width="100%">
+                </div>
+            <div>
+                <img src="/img/2.jfif"  height="100%" width="100%" >
+            </div>
+            <div>
+                <img src="/img/3.jfif"  height="100%" width="100%">
+            </div>
+            <div>
+                <img src="/img/4.jfif"  height="100%" width="100%" >
+            </div>
+            <div>
+                <img src="/img/5.jfif"  height="100%" width="100%">
+            </div>
+            
+            </div>
+        </div>
+
+        <div class = "FlavorText" style="margin-top: 2%;">
+            <p style="text-align: center;">Quality Products</p>
+             <div id = "productslideshow" style=" width: 600px; height: 400px; ">
+            <div>
+                <img src="/img/Nail1.png" height="100%" width="100%">
+                </div>
+            <div>
+                <img src="/img/Nail3.png"  height="100%" width="100%">
+            </div>
+            <div>
+                <img src="/img/tatto.png"  height="100%" width="100%" >
+            </div>
+            
+            </div>
+        </div>
+        <div class="FlavorText" style="margin-top: 2%;">
+            <p>Quality Studios</p>
+             <div style="text-align: center;">
+            <img src="/img/shop_google.png" width= "50%"  height= "auto" alt="shop">
+    </div>
+        </div>
+        
+    <!--To DO: Add a "Book an appointment with one of our staff" button, and see if we can add portfolio onto the main page-->
+    <p class="FlavorText" style="text-align: center;">Book an appointment with one of our staff now.</p>
+    <a href="/staff" class="FlavorText" style="text-align: center;"><p>Book now</p></a>
+
+    {{> footer}}
+    
+   <script>
+        const bg = document.getElementById('header');
+        var header = document.getElementsByClassName("navLink")
+        const bar = document.getElementById('navBar')
+       
+        window.addEventListener('scroll',function(){
+           resizeHeaderImage();
+            // Makes it so when you scroll past a certain point, the nav bar will stay in the same place and will not grow
+            resizeNavBar();
+           
+       })
+       window.addEventListener('load',function(){
+            getNavBarSize();
+            resizeNavBar();
+            activate_cutsslides();
+            activate_productslides();
+            
+
+       })
+       //"Quality Cuts" slideshow
+       function activate_cutsslides(){
+           //When transitioning, it hides the current image
+           $("#cutsslideshow > div:gt(0)").hide();
+
+            setInterval(function() { 
+            $('#cutsslideshow > div:first')
+            // Interval of fade-in/fade-out
+            .fadeOut(1000)
+            .next()
+            .fadeIn(1000)
+            .end()
+            .appendTo('#cutsslideshow');
+            }, 3000);
+
+       }
+       //"Quality Products" slideshow
+       function activate_productslides(){
+           $("#productslideshow > div:gt(0)").hide();
+
+            setInterval(function() { 
+           //Interval of fade-in/fade-out 
+            $('#productslideshow > div:first')
+            .fadeOut(1000)
+            .next()
+            .fadeIn(1000)
+            .end()
+            .appendTo('#productslideshow');
+            }, 3000);
+
+       }
+       
+
+        function resizeNavBar(){
+             if(window.pageYOffset>610){
+               bar.style.position = "fixed"
+               bar.style.top = "0%";
+               bar.style.left = "0%";
+               //bar.style.textAlign = "center"
+            }
+            else{
+                //Once you scroll up past a certain point, the bar will begin to grow / shrink again.
+                for(i =0; i<header.length; i++){
+                   
+                    navBarSize= 25+window.pageYOffset/20+'px';
+                    header[i].style.fontSize = navBarSize;
+                    bar.style.left= "0%"
+                    bar.style.position = "relative"
+                }
+        
+           } 
+        }
+        //Loads the correct NavBar size if the user loads the homepage below the cutoff line
+        function getNavBarSize(){
+            for(i =0; i<header.length; i++){
+                    navBarSize= 25+610/20+'px'
+                    header[i].style.fontSize = navBarSize;
+                    bar.style.left= "0%"
+                    bar.style.position = "relative"
+                }
+        
+
+        }
+        function resizeHeaderImage(){
+            bg.style.backgroundSize = 100- +window.pageYOffset/12+ '%' //Shrinks the barbershop logo as you scroll down
+            bg.style.opacity= 1 -+window.pageYOffset/700+ '' // Decreases the opacity of the barbershop logo as you scroll down
+        }
+   </script>
+</body>

@@ -1,0 +1,56 @@
+label {
+    color: black;
+    font-family: Arial;
+}
+
+input {
+    color: black;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid #888;
+    box-sizing: border-box;
+}
+
+div {
+    margin: auto;
+    width: 30%;
+    text-align: left;
+ }
+
+button {
+    text-align: center;
+    background-color: #888;
+    color:white;
+    padding:14px 20px;
+    margin: 8px 0px;
+    border:none;
+    width: 100%;
+    text-decoration: none;
+    font: 12px Arial;
+    cursor: pointer;
+}
+
+form {
+    text-align: left;
+}
+
+a {
+    display:block;
+    color:white;
+    background-color: #888;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font: 12px Arial;
+    cursor: pointer;
+}
+
+a:hover {
+    background-color: black;
+}
+
+button:hover {
+    background-color: black;
+}

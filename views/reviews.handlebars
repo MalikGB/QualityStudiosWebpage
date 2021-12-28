@@ -1,0 +1,280 @@
+<head>
+  <link rel="stylesheet" href="css\jquery-google-reviews.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+    <title>Quality Studios Reviews</title>
+
+  <!-- JQUERY IS REQUIRED (NPM install JQuery)-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- DO NOT FORGET TO SET YOUR OWN API KEY!  -->
+  <!-- Create an API key: -->
+  <!-- https://console.developers.google.com/apis/library/places-backend.googleapis.com/?q=places -->
+  <!--Note: Once product goes into full deployment (after project is finished) we will need to replace the Google maps API key with the company's-->
+  <!-- Steps to generate API key can be found in the "How to get API key file-->
+  
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyBOetr4PX1f23YaGfhEseKL8rXwNvKzTEY"></script>
+  
+
+  <!-- load the plugin/script -->
+  <script>
+    /*
+    Source code was created by Simon Neutert:
+    Github: https://github.com/simonneutert/jquery-google-reviews
+    /* README
+Inspired by Steven Monson's magnificent article here:
+https://www.launch2success.com/guide/display-google-reviews-website-2017/
+
+Stevens code was based on peledies jquery plugin on github:
+https://github.com/peledies/google-places
+
+made me think and remix their work into the following lines.
+
+Thank you guys!
+*/
+
+(function($) {
+
+  $.fn.googlePlaces = function(options) {
+    // This is the easiest way to have default options.
+    var settings = $.extend({
+      // These are the defaults.
+      header: "",
+      footer: '',
+      maxRows: 6,
+      minRating: 4,
+      months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      textBreakLength: "90",
+      shortenNames: true,
+      placeId: "",
+      moreReviewsButtonUrl: '',
+      moreReviewsButtonLabel: 'Show More Reviews',
+      writeReviewButtonUrl: '',
+      writeReviewButtonLabel: 'Write New Review',
+      showReviewDate: false,
+      showProfilePicture: true
+    }, options);
+
+    var targetDiv = this[0];
+    var targetDivJquery = this;
+
+    var renderMoreReviewsButton = function() {
+      return '<div class="more-reviews"><a href="'+settings.moreReviewsButtonUrl+'" target="_blank">'+settings.moreReviewsButtonLabel+'</a></div>';   
+    };
+
+    var renderWriteReviewButton = function() {
+      return '<div class="write-review"><a href="'+settings.writeReviewButtonUrl+'" target="_blank">'+settings.writeReviewButtonLabel+'</a></div>';   
+    };
+
+    var renderPicture = function(picture) {
+      return "<img class='review-picture' src='"+picture+"'>";
+    }
+
+    var renderHeader = function(header) {
+      var html = "";
+      html += header + "<br>";
+      targetDivJquery.append(html);
+    };
+
+    var renderFooter = function(footer) {
+      var html = "";
+      var htmlButtons = "";
+
+      if (settings.moreReviewsButtonUrl) {
+        htmlButtons += renderMoreReviewsButton();
+      }
+      if (settings.writeReviewButtonUrl) {
+        htmlButtons += renderWriteReviewButton();
+      }
+      if (htmlButtons != "") {
+        html += '<div class="buttons">'+htmlButtons+'</div>';
+      }
+      
+      html += "<br>" + footer + "<br>";
+      targetDivJquery.after(html);
+    };
+
+    var shortenName = function(name) {
+      if (name.split(" ").length > 1) {
+        var shortenedName = "";
+        shortenedName = name.split(" ");
+        var lastNameFirstLetter = shortenedName[1][0];
+        var firstName = shortenedName[0];
+        if (lastNameFirstLetter == ".") {
+          return firstName;
+        } else {
+          return firstName + " " + lastNameFirstLetter + ".";
+        }
+      } else if (name != undefined) {
+        return name;
+      } else {
+        return '';
+      }
+    };
+
+    var renderStars = function(rating) {
+      var stars = '<div class="review-stars"><ul>';
+      // fills gold stars
+      for (var i = 0; i < rating; i++) {
+        stars += '<li><i class="star"></i></li>';
+      }
+      // fills empty stars
+      if (rating < 5) {
+        for (var i = 0; i < (5 - rating); i++) {
+          stars += '<li><i class="star inactive"></i></li>';
+        }
+      }
+      stars += "</ul></div>";
+      return stars;
+    };
+
+    var convertTime = function(UNIX_timestamp) {
+      var newDate = new Date(UNIX_timestamp * 1000);
+      var months = settings.months;
+      var time = newDate.getDate() + ". " + months[newDate.getMonth()] + " " + newDate.getFullYear();
+      return time;
+    };
+    
+    var filterReviewsByMinRating = function(reviews) {
+      if (reviews === void 0) {
+        return [];
+      } else {
+        for (var i = reviews.length - 1; i >= 0; i--) {
+          var review = reviews[i];
+          if (review.rating < settings.minRating) {
+            reviews.splice(i, 1);
+          }
+        }
+        return reviews;
+      }
+    };
+
+    var sortReviewsByDateDesc = function(reviews) {
+      if (typeof reviews != "undefined" && reviews != null && reviews.length != null && reviews.length > 0) {
+        return reviews.sort(function(a,b) {return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);} ).reverse();
+      } else {
+        return []
+      }
+    }
+
+    var renderReviews = function(reviews) {
+      reviews.reverse();
+      var html = "";
+      var rowCount = (settings.maxRows > 0) ? settings.maxRows - 1 : reviews.length - 1;
+      
+      rowCount = (rowCount > reviews.length - 1) ? reviews.length - 1 : rowCount;
+      for (var i = rowCount; i >= 0; i--) {
+        var review = reviews[i];
+        var stars = renderStars(review.rating);
+        var date = convertTime(review.time);
+        var name = settings.shortenNames ? shortenName(review.author_name) : review.author_name;
+        var style = (review.text.length > parseInt(settings.textBreakLength)) ? "review-item-long" : "review-item";
+        
+        var picture = "";
+        if(settings.showProfilePicture) {
+          picture = renderPicture(review.profile_photo_url); 
+        }
+
+        html = html + "<div class="+ style +"><div class='review-header'>"+ picture +"<div class='review-usergrade'><div class='review-meta'><span class='review-author'>" + name + "</span><span class='review-sep'></span>" + "</div>" + stars + "</div></div><p class='review-text'>" + review.text + "</p></div>";
+        // I do not need to display the date... but if you do:
+        // +"<br><span class='review-date'>"+date+"</span>"+
+      }
+      targetDivJquery.append(html);
+    };
+
+    // GOOGLE PLACES API CALL STARTS HERE
+
+    // initiate a Google Places Object
+    var service = new google.maps.places.PlacesService(targetDiv);
+    // set.getDetails takes 2 arguments: request, callback
+    // see documentation here:  https://developers.google.com/maps/documentation/javascript/3.exp/reference#PlacesService
+    const request = {
+      placeId: settings.placeId
+    };
+    // the callback is what initiates the rendering if Status returns OK
+    var callback = function(place, status) {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        var filteredReviews = filterReviewsByMinRating(place.reviews);
+        var sortedReviews = sortReviewsByDateDesc(filteredReviews);
+        if (sortedReviews.length > 0) {
+          renderHeader(settings.header);
+          renderReviews(sortedReviews);
+          renderFooter(settings.footer);
+        }
+      }
+    }
+
+    return this.each(function() {
+      // Runs the Plugin
+      if (settings.placeId === undefined || settings.placeId === "") {
+        console.error("NO PLACE ID DEFINED");
+        return
+      }
+      service.getDetails(request, callback);
+    });
+  };
+
+}(jQuery));
+
+  </script>
+
+  <!-- load the css to display the reviews beautifully -->
+  <link href="css\jquery-google-reviews.css/" rel="stylesheet">
+</head>
+<body>
+  <header>
+        <h2>Quality Studios Barbershop</h2>
+        <h3>Reviews</h3>
+    </header>
+    {{> navBar}}
+    <br />
+  {{!-- Our custom reveiws --}}
+  <div id="custom-reviews">
+   {{#each customReviews}}
+        <div id="{{this.firstName}} {{this.lastName}}" style="border-style: solid; border-color:black; border-width: thin; background-color:rgb(128, 128, 128,0.4);">
+              <h3 style="margin-left: 5px;">{{this.firstName}} {{this.lastName}}</h3>
+              <hr style="margin: 10px; height: 5px; width: 30%; margin-left: 5px; background-color: darkgray">
+              {{#with this}}
+                {{{makeStars}}}
+              {{/with}}
+              <p style="margin-left: 5px;">{{this.reviewText}}</p>
+        </div>
+    {{/each}}
+  </div>
+  {{#if user}}
+    <br />
+    <a class="navLink" href="/leaveReview"><li style="float:center" class="navigationElement">Leave a Review!</li></a>
+    <br />
+  {{/if}}
+
+  <h2>Customers on Google Love Us Too!</h2>
+ <!-- the plugin needs an id to interact with, best with an empty div -->
+  <div style="background-color:rgb(128, 128, 128,0.4);">
+  <div id="google-reviews"></div>
+   </div>
+  <script>
+    jQuery(document).ready(function($) {
+      if ($("#google-reviews").length == 0) {
+        return
+      }
+      // Find a placeID via https://developers.google.com/places/place-id
+      $("#google-reviews").googlePlaces({
+        placeId: 'ChIJYZGcLM5hDogRO-3dnHkaZR4',
+        // the following params  are optional (default values)
+        header: "", // html/text over Reviews
+        footer: '', // html/text under Reviews block
+        maxRows: 5, // max 5 rows of reviews to be displayed
+        minRating: 4, // minimum rating of reviews to be displayed
+        months: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+        textBreakLength: "90", // length before a review box is set to max width
+        shortenNames: true, // example: "Max Mustermann" -> "Max M."",
+        moreReviewsButtonUrl: 'https://www.google.com/maps/place/Quality+Studios/@41.538889,-88.1056393,17z/data=!4m7!3m6!1s0x880e61ce2c9c9161:0x1e651a799cdded3b!8m2!3d41.5389638!4d-88.1033459!9m1!1b1', // url to Google Place reviews popup
+        moreReviewsButtonLabel: 'Show More Reviews',
+        writeReviewButtonUrl: 'https://www.google.com/maps/place/Quality+Studios/@41.538889,-88.1056393,17z/data=!4m7!3m6!1s0x880e61ce2c9c9161:0x1e651a799cdded3b!8m2!3d41.5389638!4d-88.1033459!9m1!1b1', // url to Google Place write review popup
+        writeReviewButtonLabel: 'Write New Review',
+        showProfilePicture: true
+      });
+    });
+    </script>
+  {{> footer}}
+</body>

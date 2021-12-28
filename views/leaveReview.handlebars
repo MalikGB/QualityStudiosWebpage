@@ -1,0 +1,24 @@
+<body>
+    <header>
+        <h2>Quality Studios Barbershop</h2>
+        <h3>Leave review</h3>
+    </header>
+    <div>
+        <form id="review" action="/leaveReview" method="POST">
+            <p><label for="score"><b>Score:</b></label><br />
+            <select name="score" type="number">
+                <option value=5>5</option>
+                <option value=4>4</option>
+                <option value=3>3</option>
+                <option value=2>2</option>
+                <option value=1>1</option>
+            </select>
+            </p>
+            <label for="reviewText"><b>Review:</b></label>
+            <textarea for="reviewText" name="reviewText" rows="5" cols="50"></textarea>
+
+            <button type="submit">Submit</button>
+
+        </form>
+    </div>
+</body>
